@@ -1,7 +1,7 @@
 ---
-title: "TRABALHO FINAL D"
+title: "Untitled"
 author: "Marina"
-date: "18/10/2018"
+date: "29/10/2018"
 output: ioslides_presentation
 ---
 
@@ -9,27 +9,97 @@ output: ioslides_presentation
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-## R Markdown
+## ÍNDICE DE DESENVOLVIMENTO HUMANO MUNICIPAL 2010- análise comparativa entre educação e renda
 
-This is an R Markdown presentation. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.
 
-## Slide with Bullets
 
-- Bullet 1
-- Bullet 2
-- Bullet 3
+## 1. Introdução
 
-## Slide with R Output
+Criado em 1990, para o Relatório de Desenvolvimento Humano do Programa das Nações Unidas para o Desenvolvimento, o Índice de Desenvolvimento Humano (IDH) é uma medida composta de indicadores de saúde, educação e renda. Ele foi criado como uma alternativa às avaliações puramente econômicas de progresso nacional, a partir do crescimento do Produto Interno Bruto (PIB). O índice varia entre 0 (valor mínimo) e 1 (valor máximo). A composição do IDH parte d pressuposto que para viver plenamente as pessoas precisam pelo menos ter a possibilidade de levar uma vida longa e saudável, acesso a conhecimento e a oportunidade de desfrutar de um padrão de vida digno.
 
-```{r cars, echo = TRUE}
-summary(cars)
+O Índice de Desenvolvimento Humano Municipal - IDHM ajusta o IDH para a realidade dos municípios refletindo as especificidades e desafios de cada localidade. O Brasil foi um dos países pioneiros ao, em 1998, adaptar e calcular o IDH para todos os municípios brasileiros.
+
+Assim, o IDHM é um índice que permite conhecer a realidade do desenvolvimento humano do território brasileiro, bem como populariza a ideia de que desenvolvimento não se resume à perspectiva do crescimento econômico. Além disso, o índice facilita a comparação entre localidades, instrumentalizando a sociedade sobre o estado da qualidade de vida nas unidades federativas, municípios e regiões metropolitanas brasileiras, estimulando a concertação de atores de forma a protagonizar atividades e políticas inovadoras para a superação dos desafios locais rumo ao desenvolvimento humano.
+
+Diante do exposto e considerada a importância do IDHM para análise de políticas públicas, este trabalho apresenta uma análise dos principais indicadores que compõem o IDHM_2010.
+
+
+**2. Análise dos dados**
+
+**2.1 Importando os dados**
+
+Os dados do IDHM_2010 foram importados utilizando o comamdo read.csv. Como os dados da planilha CSV de origem estão separados por ",", foi utilizado o comando sep = ",". Apesar de ter sido utilizado o comando "encoding = "UFT-8" para corrigir os caracteres com acento, os caracteres com acento aparecerão desconfigurados, pois eles não foram corrigidos na origem.
+
+```{r }
+
+library(tidyverse)
+library(knitr)
+
+idhm_2010 <- read.csv("/Users/MARINASOUSA/Desktop/Disciplina D3_Final/Dados brutos/idhm2010.csv", 
+                      header = TRUE, sep = "," , dec=",", encoding ="UTF-8" )
 ```
 
-## Slide with Plot
+**2.2 Para conhecer o conteúdo do arquivo importado foi utilizado o comando "glimpse". Esse comando apresenta o conteúdo das primeiras linhas e colunas do arquivo importado**
 
-```{r pressure}
-plot(pressure)
+```{r }
+glimpse(idhm_2010)
+```
+
+
+**2.3 Apresentar o IDHM_Educação do município com maior IDHM_renda**
+
+```{r }
+idhm_2010 %>%
+  arrange(desc(IDHM_Renda))
+```
+
+
+**2.4 Apresentar o IDHM_Renda do município com maior IDHM_Educação**
+
+```{r }
+idhm_2010 %>%
+  select(Nome, IDHM_Renda, IDHM_Educacao) %>%
+  arrange(desc(IDHM_Educacao))
+  
+```
+
+
+**2.5 Apresentar a média do IDHM_Educação de todos as UFs**
+
+
+```{r }
+idhm_2010 %>% 
+  group_by(uf) %>% 
+  summarise(IDHM_Educacao = mean(IDHM_Educacao)) %>% 
+  arrange(desc(IDHM_Educacao))
+  
+```
+
+**2.6 Comparando a média dos IDHM_Educação e IDHM_Renda dos Estados**
+
+Primeiro foi necessário criar uma variável "idhm_edu_renda_diff" com a diferença dos valores do IDHM_Educação por município. Analisando o resultado da diferença, percebe-se que valores mais próximos de zero representam baixa discrepância entre os IDHMs de renda e educação. Os resultados negativos,  significam que o IDHM_Educação é maior que o IDHM_Renda.
+
+
+```{r }
+idhm_edu_renda_diff <- idhm_2010 %>%
+  mutate(idhm_edu_renda_diff= IDHM_Renda - IDHM_Educacao) %>%
+  group_by(uf) %>%
+  summarise(idhm_edu_renda_diff = mean(idhm_edu_renda_diff))%>%
+  arrange(desc(idhm_edu_renda_diff))
+ 
+```
+
+**2.7 Faça um gráfico de barras comparando a variação média IDHM_Renda e IDHM_Educacao por UF. Utilizar as estimativas intervalares para construir barras com o intervalo de confiança**
+
+```{r}
+
+media <- c("med_rend", "med_edu")
+valor <- c(mean(idhm_2010$IDHM_Renda), mean(idhm_2010$IDHM_Educacao))
+idh3 <- data.frame(media, valor)
+
+ggplot(idh3, aes(x= media, y = valor, fill = media)) +
+  geom_bar(stat = "identity")
+
 ```
 
