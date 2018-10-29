@@ -104,3 +104,5 @@ ggplot(idh3, aes(x= media, y = valor, fill = media)) +
 
 ```
 
+
+
