@@ -1,5 +1,5 @@
 ---
-title: "TRABALHO FINAL D6"
+title: "TRABALHO FINAL D"
 author: "Marina"
 date: "18/10/2018"
 output: ioslides_presentation
