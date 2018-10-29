@@ -1,6 +1,6 @@
 ---
-title: "Untitled"
-author: "Marina"
+title: "ÍNDICE DE DESENVOLVIMENTO HUMANO MUNICIPAL 2010- análise comparativa entre educação e renda"
+author: "Marina Silvestre de Alencar Sousa"
 date: "29/10/2018"
 output: ioslides_presentation
 ---
@@ -8,9 +8,6 @@ output: ioslides_presentation
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
-
-## ÍNDICE DE DESENVOLVIMENTO HUMANO MUNICIPAL 2010- análise comparativa entre educação e renda
-
 
 
 
@@ -20,14 +17,13 @@ Criado em 1990, para o Relatório de Desenvolvimento Humano do Programa das Naç
 
 O Índice de Desenvolvimento Humano Municipal - IDHM ajusta o IDH para a realidade dos municípios refletindo as especificidades e desafios de cada localidade. O Brasil foi um dos países pioneiros ao, em 1998, adaptar e calcular o IDH para todos os municípios brasileiros.
 
+## cont.
 Assim, o IDHM é um índice que permite conhecer a realidade do desenvolvimento humano do território brasileiro, bem como populariza a ideia de que desenvolvimento não se resume à perspectiva do crescimento econômico. Além disso, o índice facilita a comparação entre localidades, instrumentalizando a sociedade sobre o estado da qualidade de vida nas unidades federativas, municípios e regiões metropolitanas brasileiras, estimulando a concertação de atores de forma a protagonizar atividades e políticas inovadoras para a superação dos desafios locais rumo ao desenvolvimento humano.
 
 Diante do exposto e considerada a importância do IDHM para análise de políticas públicas, este trabalho apresenta uma análise dos principais indicadores que compõem o IDHM_2010.
 
 
-**2. Análise dos dados**
-
-**2.1 Importando os dados**
+##2.1 Importando os dados
 
 Os dados do IDHM_2010 foram importados utilizando o comamdo read.csv. Como os dados da planilha CSV de origem estão separados por ",", foi utilizado o comando sep = ",". Apesar de ter sido utilizado o comando "encoding = "UFT-8" para corrigir os caracteres com acento, os caracteres com acento aparecerão desconfigurados, pois eles não foram corrigidos na origem.
 
@@ -37,35 +33,40 @@ library(tidyverse)
 library(knitr)
 
 idhm_2010 <- read.csv("/Users/MARINASOUSA/Desktop/Disciplina D3_Final/Dados brutos/idhm2010.csv", 
-                      header = TRUE, sep = "," , dec=",", encoding ="UTF-8" )
+                      header = TRUE, sep = "," , dec=",", fileEncoding = "UTF-8" )
+
 ```
 
-**2.2 Para conhecer o conteúdo do arquivo importado foi utilizado o comando "glimpse". Esse comando apresenta o conteúdo das primeiras linhas e colunas do arquivo importado**
+##2.2 Para conhecer o conteúdo do arquivo importado foi utilizado o comando "glimpse". Esse comando apresenta o conteúdo das primeiras linhas e colunas do arquivo importado
 
 ```{r }
 glimpse(idhm_2010)
 ```
 
 
-**2.3 Apresentar o IDHM_Educação do município com maior IDHM_renda**
+##2.3 Apresentar o IDHM_Educação do município com maior IDHM_renda
 
 ```{r }
-idhm_2010 %>%
-  arrange(desc(IDHM_Renda))
+head(
+  idhm_2010 %>%
+  arrange(desc(IDHM_Renda)
+          ), n=10)
 ```
 
 
-**2.4 Apresentar o IDHM_Renda do município com maior IDHM_Educação**
+##2.4 Apresentar o IDHM_Renda do município com maior IDHM_Educação
 
 ```{r }
-idhm_2010 %>%
+head(
+  idhm_2010 %>%
   select(Nome, IDHM_Renda, IDHM_Educacao) %>%
-  arrange(desc(IDHM_Educacao))
+  arrange(desc(IDHM_Educacao)
+          ), n=10)
   
 ```
 
 
-**2.5 Apresentar a média do IDHM_Educação de todos as UFs**
+##2.5 Apresentar a média do IDHM_Educação de todos as UFs
 
 
 ```{r }
@@ -76,7 +77,7 @@ idhm_2010 %>%
   
 ```
 
-**2.6 Comparando a média dos IDHM_Educação e IDHM_Renda dos Estados**
+##2.6 Comparando a média dos IDHM_Educação e IDHM_Renda dos Estados
 
 Primeiro foi necessário criar uma variável "idhm_edu_renda_diff" com a diferença dos valores do IDHM_Educação por município. Analisando o resultado da diferença, percebe-se que valores mais próximos de zero representam baixa discrepância entre os IDHMs de renda e educação. Os resultados negativos,  significam que o IDHM_Educação é maior que o IDHM_Renda.
 
@@ -90,8 +91,8 @@ idhm_edu_renda_diff <- idhm_2010 %>%
  
 ```
 
-**2.7 Faça um gráfico de barras comparando a variação média IDHM_Renda e IDHM_Educacao por UF. Utilizar as estimativas intervalares para construir barras com o intervalo de confiança**
-
+##2.7 variação média IDHM_Renda e IDHM_Educacao
+Foi feito um gráfico de barras comparando a variação média IDHM_Renda e IDHM_Educacao 
 ```{r}
 
 media <- c("med_rend", "med_edu")
@@ -102,4 +103,6 @@ ggplot(idh3, aes(x= media, y = valor, fill = media)) +
   geom_bar(stat = "identity")
 
 ```
+
+
 
